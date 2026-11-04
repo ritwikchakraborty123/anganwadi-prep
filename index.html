@@ -44,7 +44,7 @@ h1{font-family:var(--f-display);font-weight:400;font-size:1.7em;line-height:1.2;
 .big{display:block;width:100%;border:0;border-radius:16px;padding:18px;background:var(--accent);color:var(--accent-ink);font-size:1.15em;font-weight:700}
 .big.alt{background:var(--card);color:var(--ink);border:1.5px solid var(--line);font-weight:600}
 .big:disabled{opacity:.45;cursor:default}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.stats{display:grid;grid-template-columns:1fr;gap:10px}
 .stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;text-align:center}
 .stat b{display:block;font-size:1.5em;font-variant-numeric:tabular-nums;line-height:1.2}
 .stat span{font-size:.75em;color:var(--muted)}
@@ -90,10 +90,10 @@ const SUBJ_ORDER = ["math","health","gk","bengali","english","reasoning"];
 const BN = n => String(n).replace(/\d/g,d=>"০১২৩৪৫৬৭৮৯"[d]);
 const KEYS = ["ক","খ","গ","ঘ"];
 const $ = s => document.querySelector(s);
-function load(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}}
-function save(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+// No browser storage: remove anything older versions of this page saved.
+try{localStorage.removeItem("icds_hist");localStorage.removeItem("icds_fs")}catch(e){}
 
-let st = {subj:"all", paper:"all", fs: load("icds_fs",19), hist: load("icds_hist",{}), list:[], i:0, right:0, answered:false, picked:null, open:false};
+let st = {subj:"all", paper:"all", fs: 19, list:[], i:0, right:0, answered:false, picked:null, open:false};
 document.documentElement.style.setProperty("--fs", st.fs+"px");
 
 const papers = [...new Set(QUESTIONS.map(q=>q.paper))];
@@ -102,20 +102,16 @@ function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor
 function esc(s){return String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
 
 function fontBtn(){return `<button class="iconbtn" id="fsBtn" aria-label="লেখা বড়/ছোট">অ ${st.fs>19?"−":"+"}</button>`}
-function bindFont(){const b=$("#fsBtn"); if(b) b.onclick=()=>{st.fs = st.fs>19?19:23; save("icds_fs",st.fs); document.documentElement.style.setProperty("--fs",st.fs+"px"); render()}}
+function bindFont(){const b=$("#fsBtn"); if(b) b.onclick=()=>{st.fs = st.fs>19?19:23; document.documentElement.style.setProperty("--fs",st.fs+"px"); render()}}
 
 function home(){
-  const p=pool(); const seen=Object.keys(st.hist).length; const ok=Object.values(st.hist).filter(v=>v).length;
-  const wrongIds = Object.entries(st.hist).filter(([k,v])=>!v).map(([k])=>k);
-  const wrongInPool = p.filter(q=>wrongIds.includes(q.id)).length;
+  const p=pool();
   const subjCount = s => QUESTIONS.filter(q=>(s==="all"||q.subject===s)&&(st.paper==="all"||q.paper===st.paper)).length;
   const paperCount = pp => QUESTIONS.filter(q=>(pp==="all"||q.paper===pp)&&(st.subj==="all"||q.subject===st.subj)).length;
   $("#app").innerHTML = `
   <div class="top"><div><h1>অঙ্গনওয়াড়ি পরীক্ষার প্রস্তুতি</h1><div class="tiny">আগের বছরের আসল প্রশ্ন · উত্তর ও ব্যাখ্যা সহ</div></div>${fontBtn()}</div>
   <div class="stats">
     <div class="stat"><b>${BN(QUESTIONS.length)}</b><span>মোট প্রশ্ন</span></div>
-    <div class="stat"><b>${BN(seen)}</b><span>অনুশীলন করেছেন</span></div>
-    <div class="stat"><b>${seen?BN(Math.round(ok*100/seen))+"%":"—"}</b><span>সঠিক</span></div>
   </div>
   <div class="sec"><h2>বিষয় বেছে নিন</h2><div class="chips">
     <button class="chip" data-s="all" aria-pressed="${st.subj==="all"}">সব<span class="n">${BN(subjCount("all"))}</span></button>
@@ -126,12 +122,10 @@ function home(){
     ${papers.map(pp=>`<button class="chip" data-p="${esc(pp)}" aria-pressed="${st.paper===pp}">${esc(pp)}<span class="n">${BN(paperCount(pp))}</span></button>`).join("")}
   </div></div>
   <button class="big" id="go" ${p.length?"":"disabled"}>শুরু করুন · ${BN(p.length)}টি প্রশ্ন</button>
-  <button class="big alt" id="redo" ${wrongInPool?"":"disabled"}>ভুল প্রশ্নগুলো আবার করুন (${BN(wrongInPool)})</button>
   <p class="tiny">প্রশ্ন এলোমেলো ক্রমে আসবে। উত্তর দেওয়ার পর <b>“আরও জানুন”</b> চাপলে বুঝিয়ে বলা থাকবে — অঙ্কের ক্ষেত্রে ধাপে ধাপে।</p>`;
   document.querySelectorAll("[data-s]").forEach(b=>b.onclick=()=>{st.subj=b.dataset.s;render()});
   document.querySelectorAll("[data-p]").forEach(b=>b.onclick=()=>{st.paper=b.dataset.p;render()});
   $("#go").onclick=()=>start(shuffle(pool()));
-  $("#redo").onclick=()=>start(shuffle(pool().filter(q=>wrongIds.includes(q.id))));
   bindFont();
 }
 function start(list){st.list=list;st.i=0;st.right=0;st.view="quiz";newQ();render();window.scrollTo(0,0)}
@@ -158,8 +152,7 @@ function quiz(){
   ${st.answered?`<div class="nav"><button class="big" id="next">${st.i+1<n?"পরের প্রশ্ন →":"ফলাফল দেখুন"}</button></div>`:`<p class="tiny" style="text-align:center">একটি উত্তরে চাপ দিন</p>`}
   <p class="tiny" style="text-align:center">এখন পর্যন্ত সঠিক: ${BN(st.right)}</p>`;
   document.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
-    st.picked=+b.dataset.j; st.answered=true; const ok=st.picked===q.answer; if(ok)st.right++;
-    st.hist[q.id]=ok; save("icds_hist",st.hist); render()});
+    st.picked=+b.dataset.j; st.answered=true; const ok=st.picked===q.answer; if(ok)st.right++; render()});
   const l=$("#learn"); if(l) l.onclick=()=>{st.open=!st.open;render()};
   const nx=$("#next"); if(nx) nx.onclick=()=>{ if(st.i+1<n){st.i++;newQ();render();window.scrollTo(0,0)} else {st.view="done";render()} };
   $("#home").onclick=()=>{st.view="home";render()};
@@ -170,7 +163,7 @@ function done(){
   $("#app").innerHTML = `<div class="qcard done">
     <div class="tiny">আপনার ফলাফল</div>
     <div class="score">${BN(st.right)}/${BN(n)}</div>
-    <div>${pct>=80?"খুব ভালো! এভাবেই চালিয়ে যান।":pct>=50?"ভালো হয়েছে। ভুলগুলো আর একবার দেখে নিন।":"চিন্তা নেই — ভুলগুলো আবার করলেই মনে থাকবে।"}</div>
+    <div>${pct>=80?"খুব ভালো! এভাবেই চালিয়ে যান।":pct>=50?"ভালো হয়েছে। ভুলগুলো আর একবার দেখে নিন।":"চিন্তা নেই — আবার অনুশীলন করলেই মনে থাকবে।"}</div>
   </div>
   <button class="big" id="h">প্রথম পাতায় যান</button>`;
   $("#h").onclick=()=>{st.view="home";render()};
