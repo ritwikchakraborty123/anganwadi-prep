@@ -1,5 +1,9 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>অঙ্গনওয়াড়ি প্রস্তুতি</title>
-<meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Tiro+Bangla&display=swap">
@@ -12,7 +16,7 @@
   --gold:#d99a14; --gold-soft:#fbf0d6;
   --f-body:"Hind Siliguri","Noto Sans Bengali","Nirmala UI",system-ui,sans-serif;
   --f-display:"Tiro Bangla","Noto Serif Bengali",Georgia,serif;
-  --fs:19px;
+  --fs:22px;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#121815; --card:#1b231f; --ink:#e7eee9; --muted:#9db0a5; --line:#2c3832;
@@ -31,36 +35,38 @@ body{font-family:var(--f-body);font-size:var(--fs);line-height:1.55;
 .wrap{max-width:640px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
 button{font:inherit;color:inherit;cursor:pointer}
 button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
-h1{font-family:var(--f-display);font-weight:400;font-size:1.7em;line-height:1.2;margin:0;text-wrap:balance}
+h1{font-family:var(--f-display);font-weight:400;font-size:1.45em;line-height:1.2;margin:0;text-wrap:balance}
 .top{display:flex;align-items:center;justify-content:space-between;gap:8px}
-.tiny{font-size:.78em;color:var(--muted)}
-.iconbtn{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:6px 12px;font-size:.85em}
+.tiny{font-size:.88em;color:var(--muted)}
+.iconbtn{border:1px solid var(--line);background:var(--card);border-radius:12px;padding:8px 14px;font-size:.9em;min-height:44px;white-space:nowrap}
 .sec{display:flex;flex-direction:column;gap:10px}
-.sec h2{font-size:.95em;font-weight:600;margin:0;color:var(--muted);letter-spacing:.02em}
+.sec h2{font-size:1em;font-weight:600;margin:0;color:var(--muted);letter-spacing:.02em}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{border:1.5px solid var(--line);background:var(--card);border-radius:999px;padding:8px 16px;font-size:.9em}
+.chip{border:1.5px solid var(--line);background:var(--card);border-radius:999px;padding:10px 16px;font-size:.95em;min-height:48px}
 .chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:600}
-.chip .n{opacity:.7;font-size:.85em;margin-left:4px}
-.big{display:block;width:100%;border:0;border-radius:16px;padding:18px;background:var(--accent);color:var(--accent-ink);font-size:1.15em;font-weight:700}
+.chip .n{opacity:.75;font-size:.85em;margin-left:4px}
+.big{display:block;width:100%;border:0;border-radius:16px;padding:18px;background:var(--accent);color:var(--accent-ink);font-size:1.1em;font-weight:700}
 .big.alt{background:var(--card);color:var(--ink);border:1.5px solid var(--line);font-weight:600}
 .big:disabled{opacity:.45;cursor:default}
 .stats{display:grid;grid-template-columns:1fr;gap:10px}
 .stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;text-align:center}
 .stat b{display:block;font-size:1.5em;font-variant-numeric:tabular-nums;line-height:1.2}
-.stat span{font-size:.75em;color:var(--muted)}
+.stat span{font-size:.88em;color:var(--muted)}
 /* quiz */
-.bar{display:flex;align-items:center;gap:12px}
-.prog{flex:1;height:8px;background:var(--line);border-radius:99px;overflow:hidden}
+.bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.bar .prog{order:9;flex-basis:100%}
+.bar .count{margin-left:auto}
+.prog{flex:1;height:10px;background:var(--line);border-radius:99px;overflow:hidden}
 .prog i{display:block;height:100%;background:var(--accent);width:0;transition:width .3s}
-.count{font-variant-numeric:tabular-nums;font-size:.85em;color:var(--muted);white-space:nowrap}
-.qcard{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:14px}
+.count{font-variant-numeric:tabular-nums;font-size:.95em;color:var(--muted);white-space:nowrap}
+.qcard{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:14px}
 .tags{display:flex;flex-wrap:wrap;gap:6px}
-.tag{font-size:.7em;padding:3px 10px;border-radius:99px;background:var(--accent-soft);color:var(--accent);font-weight:600}
+.tag{font-size:.8em;padding:3px 10px;border-radius:99px;background:var(--accent-soft);color:var(--accent);font-weight:600}
 .tag.paper{background:var(--gold-soft);color:var(--ink)}
-.q{font-size:1.08em;font-weight:600;margin:0;white-space:pre-line}
+.q{font-size:1.12em;line-height:1.6;font-weight:600;margin:0;white-space:pre-line}
 .opts{display:flex;flex-direction:column;gap:10px}
-.opt{display:flex;gap:12px;align-items:flex-start;text-align:left;width:100%;border:2px solid var(--line);background:var(--bg);border-radius:14px;padding:14px}
-.opt .k{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--card);border:1.5px solid var(--line);font-weight:700;font-size:.85em}
+.opt{display:flex;gap:12px;align-items:flex-start;text-align:left;width:100%;border:2px solid var(--line);background:var(--bg);border-radius:14px;padding:14px 12px;font-size:1.05em;line-height:1.5}
+.opt .k{flex:none;width:1.6em;height:1.6em;border-radius:50%;display:grid;place-items:center;background:var(--card);border:1.5px solid var(--line);font-weight:700;font-size:.85em}
 .opt span:last-child{min-width:0;padding-top:1px}
 .opt.right{border-color:var(--ok);background:var(--ok-soft)}
 .opt.right .k{background:var(--ok);border-color:var(--ok);color:#fff}
@@ -70,9 +76,9 @@ h1{font-family:var(--f-display);font-weight:400;font-size:1.7em;line-height:1.2;
 .verdict{font-weight:700;font-size:1.05em}
 .verdict.ok{color:var(--ok)} .verdict.bad{color:var(--bad)}
 .learn{border:1.5px dashed var(--accent);background:transparent;color:var(--accent);border-radius:12px;padding:12px;font-weight:600;width:100%}
-.explain{background:var(--accent-soft);border-radius:14px;padding:14px 16px;white-space:pre-line;font-size:.95em}
-.explain .src{display:block;margin-top:10px;font-size:.78em;color:var(--muted)}
-.warn{background:var(--gold-soft);border-radius:12px;padding:10px 14px;font-size:.85em}
+.explain{background:var(--accent-soft);border-radius:14px;padding:14px;white-space:pre-line;font-size:1em;line-height:1.65}
+.explain .src{display:block;margin-top:10px;font-size:.85em;color:var(--muted)}
+.warn{background:var(--gold-soft);border-radius:12px;padding:10px 14px;font-size:.95em}
 .nav{display:flex;gap:10px}
 .nav .big{flex:1}
 .nav .big.alt{flex:0 0 auto;width:auto;padding-inline:20px}
@@ -80,6 +86,8 @@ h1{font-family:var(--f-display);font-weight:400;font-size:1.7em;line-height:1.2;
 .score{font-family:var(--f-display);font-size:3.2em;line-height:1;font-variant-numeric:tabular-nums}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
+</head>
+<body>
 
 <div class="wrap" id="app"></div>
 
@@ -93,7 +101,7 @@ const $ = s => document.querySelector(s);
 // No browser storage: remove anything older versions of this page saved.
 try{localStorage.removeItem("icds_hist");localStorage.removeItem("icds_fs")}catch(e){}
 
-let st = {subj:"all", paper:"all", fs: 19, list:[], i:0, right:0, answered:false, picked:null, open:false};
+let st = {subj:"all", paper:"all", fs: 22, list:[], i:0, right:0, answered:false, picked:null, open:false};
 document.documentElement.style.setProperty("--fs", st.fs+"px");
 
 const papers = [...new Set(QUESTIONS.map(q=>q.paper))];
@@ -101,8 +109,8 @@ function pool(){return QUESTIONS.filter(q=>(st.subj==="all"||q.subject===st.subj
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 function esc(s){return String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
 
-function fontBtn(){return `<button class="iconbtn" id="fsBtn" aria-label="লেখা বড়/ছোট">অ ${st.fs>19?"−":"+"}</button>`}
-function bindFont(){const b=$("#fsBtn"); if(b) b.onclick=()=>{st.fs = st.fs>19?19:23; document.documentElement.style.setProperty("--fs",st.fs+"px"); render()}}
+function fontBtn(){return `<button class="iconbtn" id="fsBtn" aria-label="লেখা বড়/ছোট">অ ${st.fs>22?"−":"+"}</button>`}
+function bindFont(){const b=$("#fsBtn"); if(b) b.onclick=()=>{st.fs = st.fs>22?22:27; document.documentElement.style.setProperty("--fs",st.fs+"px"); render()}}
 
 function home(){
   const p=pool();
@@ -171,3 +179,6 @@ function done(){
 function render(){ if(st.view==="quiz") quiz(); else if(st.view==="done") done(); else home(); }
 render();
 </script>
+
+</body>
+</html>
