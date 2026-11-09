@@ -105,8 +105,21 @@ let st = {subj:"all", paper:"all", fs: 22, list:[], i:0, right:0, answered:false
 document.documentElement.style.setProperty("--fs", st.fs+"px");
 
 const papers = [...new Set(QUESTIONS.map(q=>q.paper))];
-function pool(){return QUESTIONS.filter(q=>(st.subj==="all"||q.subject===st.subj)&&(st.paper==="all"||q.paper===st.paper))}
-function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+// Fixed sequence: same every time, subjects spread evenly through the whole list.
+// Within each subject a seeded (constant) shuffle mixes papers; then each question
+// gets slot (i+0.5)/count for its subject and everything is sorted by slot.
+const FIXED = (()=>{
+  let seed=20261109; const rnd=()=>{seed=(seed*1103515245+12345)%2147483648;return seed/2147483648};
+  const bySubj={}; QUESTIONS.forEach(q=>(bySubj[q.subject]??=[]).push(q));
+  const keyed=[];
+  Object.keys(bySubj).sort((a,b)=>SUBJ_ORDER.indexOf(a)-SUBJ_ORDER.indexOf(b)).forEach((sj,si)=>{
+    const a=bySubj[sj].slice();
+    for(let i=a.length-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[a[i],a[j]]=[a[j],a[i]]}
+    a.forEach((q,i)=>keyed.push({q,k:(i+0.5)/a.length,si}));
+  });
+  return keyed.sort((x,y)=>x.k-y.k||x.si-y.si).map(x=>x.q);
+})();
+function pool(){return FIXED.filter(q=>(st.subj==="all"||q.subject===st.subj)&&(st.paper==="all"||q.paper===st.paper))}
 function esc(s){return String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
 
 function fontBtn(){return `<button class="iconbtn" id="fsBtn" aria-label="লেখা বড়/ছোট">অ ${st.fs>22?"−":"+"}</button>`}
@@ -130,10 +143,10 @@ function home(){
     ${papers.map(pp=>`<button class="chip" data-p="${esc(pp)}" aria-pressed="${st.paper===pp}">${esc(pp)}<span class="n">${BN(paperCount(pp))}</span></button>`).join("")}
   </div></div>
   <button class="big" id="go" ${p.length?"":"disabled"}>শুরু করুন · ${BN(p.length)}টি প্রশ্ন</button>
-  <p class="tiny">প্রশ্ন এলোমেলো ক্রমে আসবে। উত্তর দেওয়ার পর <b>“আরও জানুন”</b> চাপলে বুঝিয়ে বলা থাকবে — অঙ্কের ক্ষেত্রে ধাপে ধাপে।</p>`;
+  <p class="tiny">প্রশ্ন সবসময় একই ক্রমে আসবে — সব বিষয় মেশানো। উত্তর দেওয়ার পর <b>“আরও জানুন”</b> চাপলে বুঝিয়ে বলা থাকবে — অঙ্কের ক্ষেত্রে ধাপে ধাপে।</p>`;
   document.querySelectorAll("[data-s]").forEach(b=>b.onclick=()=>{st.subj=b.dataset.s;render()});
   document.querySelectorAll("[data-p]").forEach(b=>b.onclick=()=>{st.paper=b.dataset.p;render()});
-  $("#go").onclick=()=>start(shuffle(pool()));
+  $("#go").onclick=()=>start(pool());
   bindFont();
 }
 function start(list){st.list=list;st.i=0;st.right=0;st.view="quiz";newQ();render();window.scrollTo(0,0)}
