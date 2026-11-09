@@ -4,7 +4,7 @@
 // bump VERSION below (v1 -> v2 -> v3 ...) and push. Phones that open the app with
 // internet will download the new copy and delete the old one. If VERSION is not
 // changed, phones keep showing the copy they already saved.
-const VERSION = "v1";
+const VERSION = "v2";
 const CACHE = "anganwadi-prep-" + VERSION;
 
 const FILES = [
