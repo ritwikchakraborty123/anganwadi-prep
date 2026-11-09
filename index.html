@@ -4,9 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>অঙ্গনওয়াড়ি প্রস্তুতি</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Tiro+Bangla&display=swap">
+<link rel="stylesheet" href="fonts/fonts.css">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png">
+<meta name="theme-color" content="#1e6b52">
 <style>
 /* Layout: single centred column, one question per screen, thumb-reachable buttons */
 :root{
@@ -184,6 +185,14 @@ function done(){
 }
 function render(){ if(st.view==="quiz") quiz(); else if(st.view==="done") done(); else home(); }
 render();
+
+// Offline: save the app on this phone (see sw.js). Asks Chrome not to clear it when storage is low.
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js").catch(()=>{});
+    if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(()=>{});
+  });
+}
 </script>
 
 </body>
